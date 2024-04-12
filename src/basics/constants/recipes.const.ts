@@ -2,7 +2,7 @@ import { RecipeType } from "../types/recipes.type";
 
 export const RECIPES: RecipeType[] = [
     {
-        "id": 1,
+        "id": "1",
         "name": "Classic Margherita Pizza",
         "ingredients": [
             "Pizza dough",
@@ -39,7 +39,7 @@ export const RECIPES: RecipeType[] = [
         ]
     },
     {
-        "id": 2,
+        "id": "2",
         "name": "Vegetarian Stir-Fry",
         "ingredients": [
             "Tofu, cubed",
@@ -80,7 +80,7 @@ export const RECIPES: RecipeType[] = [
         ]
     },
     {
-        "id": 3,
+        "id": "3",
         "name": "Chocolate Chip Cookies",
         "ingredients": [
             "All-purpose flour",
@@ -124,7 +124,7 @@ export const RECIPES: RecipeType[] = [
         ]
     },
     {
-        "id": 4,
+        "id": "4",
         "name": "Chicken Alfredo Pasta",
         "ingredients": [
             "Fettuccine pasta",
@@ -165,7 +165,7 @@ export const RECIPES: RecipeType[] = [
         ]
     },
     {
-        "id": 5,
+        "id": "5",
         "name": "Mango Salsa Chicken",
         "ingredients": [
             "Chicken thighs",
