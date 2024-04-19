@@ -25,9 +25,14 @@ export const useTodoList = () => {
     setTodoListItems((prevState) => [...prevState, generateTodoItem()]);
   };
 
+  const removeTodoItem = (id: string) => {
+    setTodoListItems((prevState) => prevState.filter((item) => item.id != id));
+  };
+
   return {
     todoListItems,
     generateTodoItem,
     addTodoItem,
+    removeTodoItem
   };
 };

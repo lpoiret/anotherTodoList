@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { useTodoList } from "./TodoList.hook";
 
 const TodoList = () => {
-  const { addTodoItem, todoListItems } = useTodoList();
+  const { addTodoItem, removeTodoItem, todoListItems } = useTodoList();
 
   return (
     <>
@@ -10,10 +10,26 @@ const TodoList = () => {
       <Button variant="outlined" onClick={addTodoItem}>
         Add
       </Button>
+
       <ul>
-        {todoListItems.map((recipe) => {
-          return <li key={recipe.id}>{recipe.name}</li>;
-        })}
+        {todoListItems.length > 0 ? (
+          todoListItems.map((recipe) => {
+            return (
+              <li key={recipe.id}>
+                {recipe.name}
+                <Button
+                  sx={{marginLeft: "20px"}}
+                  variant="outlined"
+                  onClick={() => removeTodoItem(recipe.id)}
+                >
+                  Remove
+                </Button>
+              </li>
+            );
+          })
+        ) : (
+          <p>The list is empty</p>
+        )}
       </ul>
     </>
   );
