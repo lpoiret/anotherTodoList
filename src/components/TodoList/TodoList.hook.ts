@@ -1,28 +1,24 @@
-import { useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { RECIPES } from "../../basics/constants/recipes.const";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export const useTodoList = () => {
   const [todoListItems, setTodoListItems] = useState(
     RECIPES.map((recipe) => ({ name: recipe.name, id: recipe.id }))
   );
+  const inputRef = useRef<HTMLInputElement>();
 
-  const generateTodoItem = () => {
-    const randomRecipe =
-      RECIPES[Math.floor(Math.random() * (RECIPES.length - 1))];
-
-    return {name: randomRecipe.name, id: uuidv4()};
+  const generateTodoItem = (taskName: string) => {
+    return { name: taskName, id: uuidv4() };
   };
 
-  const addTodoItem = () => {
-    // Shallow
-    // todoListItems.push(generateTodoItem())
-    // setTodoListItems(todoListItems)
-
-    // Prev state
-    // setTodoListItems([...todoListItems, generateTodoItem()]);
-
-    setTodoListItems((prevState) => [...prevState, generateTodoItem()]);
+  const addTodoItem = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    
+    const inputValue = inputRef.current?.value
+    if(inputValue) {
+      setTodoListItems((prevState) => [...prevState, generateTodoItem(inputValue)]);
+    }
   };
 
   const removeTodoItem = (id: string) => {
@@ -33,6 +29,7 @@ export const useTodoList = () => {
     todoListItems,
     generateTodoItem,
     addTodoItem,
-    removeTodoItem
+    removeTodoItem,
+    inputRef,
   };
 };
