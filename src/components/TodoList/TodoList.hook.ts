@@ -1,12 +1,20 @@
-import { FormEvent, useMemo, useRef, useState } from "react";
-import { TASKS } from "../../basics/constants/tasks.const";
-import { v4 as uuidv4 } from 'uuid';
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { v4 as uuidv4 } from "uuid";
 import { TaskType } from "../../basics/types/task.type";
+import { TASKS } from "../../basics/constants/tasks.const";
+import debounce from "@mui/material/utils/debounce";
 
 export const useTodoList = () => {
-  const [todoListItems, setTodoListItems] = useState<TaskType[]>(
-    TASKS.map((task) => ({ name: task.name, id: task.id, done: task.done }))
-  );
+  const [todoListItems, setTodoListItems] = useState<TaskType[]>([]);
+  const [searchText, setSearchText] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<TaskType[]>([]);
 
   const inputRef = useRef<HTMLInputElement>();
 
@@ -51,6 +59,38 @@ export const useTodoList = () => {
     setTodoListItems([...todoListItems]);
   };
 
+  const searchTasks = useCallback(
+    async (taskName: string): Promise<void> => {
+      if (taskName.length < 3) {
+        setSearchResults([]);
+        
+        return
+      }
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+      });
+
+      const searchResults =  TASKS.filter((task) => {
+        const searchRegex = new RegExp(`${taskName}.*`, "i");
+        return searchRegex.test(task.name);
+      });
+
+      setSearchResults(searchResults)
+    },
+    [setSearchResults]
+  );
+
+  const debouncedSearchTask = useCallback(debounce(searchTasks, 500), [debounce, searchTasks]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await debouncedSearchTask(searchText);;
+    };
+
+    fetchData();
+  }, [debouncedSearchTask, searchText]);
+
   return {
     todoListItems,
     generateTodoItem,
@@ -60,5 +100,8 @@ export const useTodoList = () => {
     onChecked,
     todoList,
     doneList,
+    searchText,
+    setSearchText,
+    searchResults,
   };
 };
