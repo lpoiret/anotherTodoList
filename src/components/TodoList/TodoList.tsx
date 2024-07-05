@@ -1,9 +1,15 @@
-import { Button, TextField } from "@mui/material";
+import { Button, Checkbox, TextField } from "@mui/material";
 import { useTodoList } from "./TodoList.hook";
 
 const TodoList = () => {
-  const { addTodoItem, removeTodoItem, todoListItems, inputRef } =
-    useTodoList();
+  const {
+    addTodoItem,
+    removeTodoItem,
+    inputRef,
+    onChecked,
+    todoList,
+    doneList,
+  } = useTodoList();
 
   return (
     <>
@@ -21,11 +27,17 @@ const TodoList = () => {
         </Button>
       </form>
 
+      <h2>{`Tasks to do (${todoList.length}) :`} </h2>
       <ul>
-        {todoListItems.length > 0 ? (
-          todoListItems.map((task) => {
+        {todoList.length > 0 ? (
+          todoList.map((task) => {
             return (
-              <li key={task.id} style={{marginTop: "10px"}}>
+              <li key={task.id} style={{ marginTop: "10px" }}>
+                <Checkbox
+                  onChange={() => {
+                    onChecked(task.id);
+                  }}
+                />
                 {task.name}
                 <Button
                   sx={{ marginLeft: "20px" }}
@@ -39,7 +51,35 @@ const TodoList = () => {
             );
           })
         ) : (
-          <p>The list is empty</p>
+          <p>Nothing to do</p>
+        )}
+      </ul>
+
+      <h2>{`${doneList.length} tasks (well) done :`} </h2>
+      <ul>
+        {doneList.length > 0 ? (
+          doneList.map((task) => {
+            return (
+              <li key={task.id} style={{ marginTop: "10px" }}>
+                <Checkbox
+                  onChange={() => {
+                    onChecked(task.id);
+                  }}
+                />
+                {task.name}
+                <Button
+                  sx={{ marginLeft: "20px" }}
+                  variant="outlined"
+                  size="small"
+                  onClick={() => removeTodoItem(task.id)}
+                >
+                  Remove
+                </Button>
+              </li>
+            );
+          })
+        ) : (
+          <p>Nothing done</p>
         )}
       </ul>
     </>
