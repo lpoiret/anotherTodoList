@@ -1,4 +1,4 @@
-import { Button, Checkbox, TextField } from "@mui/material";
+import { Autocomplete, Button, Checkbox, TextField } from "@mui/material";
 import { useTodoList } from "./TodoList.hook";
 
 const TodoList = () => {
@@ -9,19 +9,30 @@ const TodoList = () => {
     onChecked,
     todoList,
     doneList,
+    setSearchText,
+    searchResults,
   } = useTodoList();
 
   return (
     <>
       <h1>My Todo</h1>
       <form onSubmit={addTodoItem}>
-        <TextField
-          id="task"
-          label="Task"
-          variant="outlined"
-          size="small"
-          inputRef={inputRef}
+        <Autocomplete
+          onInputChange={(event, newInputValue) => {
+            setSearchText(newInputValue);
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Add a location"
+              inputRef={inputRef}
+              fullWidth
+            />
+          )}
+          options={searchResults}
+          getOptionLabel={(option) => option.name}
         />
+
         <Button variant="outlined" type="submit" sx={{ marginLeft: "20px" }}>
           Add
         </Button>
