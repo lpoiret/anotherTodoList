@@ -1,6 +1,7 @@
 import {
   FormEvent,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -10,11 +11,13 @@ import { v4 as uuidv4 } from "uuid";
 import { TaskType } from "../../basics/types/task.type";
 import { TASKS } from "../../basics/constants/tasks.const";
 import debounce from "@mui/material/utils/debounce";
+import { TaskContext } from "../../context/task";
 
 export const useTodoList = () => {
-  const [todoListItems, setTodoListItems] = useState<TaskType[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [searchResults, setSearchResults] = useState<TaskType[]>([]);
+
+  const {todoTask, setTodoTask} = useContext(TaskContext)
 
   const inputRef = useRef<HTMLInputElement>();
 
@@ -27,7 +30,7 @@ export const useTodoList = () => {
 
     const inputValue = inputRef.current?.value;
     if (inputValue) {
-      setTodoListItems((prevState) => [
+      setTodoTask((prevState) => [
         ...prevState,
         generateTodoItem(inputValue),
       ]);
@@ -35,28 +38,28 @@ export const useTodoList = () => {
   };
 
   const removeTodoItem = (id: string) => {
-    setTodoListItems((prevState) => prevState.filter((item) => item.id != id));
+    setTodoTask((prevState) => prevState.filter((item) => item.id != id));
   };
 
   const todoList = useMemo(
-    () => todoListItems.filter((task) => !task.done),
-    [todoListItems]
+    () => todoTask.filter((task) => !task.done),
+    [todoTask]
   );
   const doneList = useMemo(
-    () => todoListItems.filter((task) => task.done),
-    [todoListItems]
+    () => todoTask.filter((task) => task.done),
+    [todoTask]
   );
 
   const onChecked = (taskId: string) => {
-    const taskIndex = todoListItems.findIndex((task) => task.id === taskId);
+    const taskIndex = todoTask.findIndex((task) => task.id === taskId);
 
     if (taskIndex === -1) {
       return;
     }
-    const task = todoListItems[taskIndex];
+    const task = todoTask[taskIndex];
     task.done = !task.done;
-    todoListItems.splice(taskIndex, 1, task);
-    setTodoListItems([...todoListItems]);
+    todoTask.splice(taskIndex, 1, task);
+    setTodoTask([...todoTask]);
   };
 
   const searchTasks = useCallback(
@@ -92,7 +95,7 @@ export const useTodoList = () => {
   }, [debouncedSearchTask, searchText]);
 
   return {
-    todoListItems,
+    todoTask,
     generateTodoItem,
     addTodoItem,
     removeTodoItem,
